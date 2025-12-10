@@ -17,6 +17,7 @@ class student(thing):
         super().__init__(name, id)
         self.DoB = DoB
         self.mark = {}
+        self.GPA = 0
         
     def display_info(self):
         print(f"Name: {self.name}")
@@ -30,17 +31,11 @@ class student(thing):
             print(f"Mark: {self.mark[i]}")
             print()
             
-        print(f"GPA: {self.get_GPA():.1f}")
-            
-    def get_GPA(self):
-        #store = np.array([i for i in self.mark.values()])
-        #return np.average(store)
-        return
-                
+        print(f"GPA: {self.GPA:.1f}")            
 class course(thing):
     def __init__(self, name, id, cred):
         super().__init__(name, id)
-        self.credits = cred
+        self.credit = cred
         
 class list:
     def __init__(self):
@@ -66,6 +61,8 @@ class list:
     
     def add_score(self, sid: str, cid: str, mark: float):
         check = True
+        current_student = None
+        
         #check if course ID available
         for c in self.course_list:
             if c.id == cid:
@@ -81,17 +78,21 @@ class list:
         for s in self.student_list:
             if s.id == sid:
                 check = False
-                s.mark[cid] = math.floor(mark*10)/10
+                current_student = s
+                current_student.mark[cid] = math.floor(mark*10)/10
                 return
             
         if check:
             print("Student ID not found")
             return
         
+        #update GPA
+        
+
 def main():
     test = list()
-    test.add_course("Basic Programming","1")
-    test.add_course("Advanced Programming","2")
+    test.add_course("Basic Programming","1",3)
+    test.add_course("Advanced Programming","2",4)
     test.add_student("Phạm Đức Anh","2410088","08/02/2006")
     test.add_score("2410088","1",16.8888)
     test.add_score("2410088","2",17.6666)
