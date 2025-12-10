@@ -28,10 +28,19 @@ class student(thing):
         for i in self.mark:
             print(f"Subject ID: {i}")
             print(f"Mark: {self.mark[i]}")
-        
+            print()
+            
+        print(f"GPA: {self.get_GPA():.1f}")
+            
+    def get_GPA(self):
+        #store = np.array([i for i in self.mark.values()])
+        #return np.average(store)
+        return
+                
 class course(thing):
-    def __init__(self, name, id):
+    def __init__(self, name, id, cred):
         super().__init__(name, id)
+        self.credits = cred
         
 class list:
     def __init__(self):
@@ -47,8 +56,8 @@ class list:
             i.display_info()
             i.display_score()
 
-    def add_course(self, name, id):
-        c = course(name, id)
+    def add_course(self, name, id, cred):
+        c = course(name, id, cred)
         self.course_list.append(c)
     
     def display_course(self):
@@ -85,6 +94,8 @@ def main():
     test.add_course("Advanced Programming","2")
     test.add_student("Phạm Đức Anh","2410088","08/02/2006")
     test.add_score("2410088","1",16.8888)
+    test.add_score("2410088","2",17.6666)
     test.display_student()
 
-main()
+if __name__ == "__main__":
+    main()
