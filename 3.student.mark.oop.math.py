@@ -1,5 +1,7 @@
 import math
 import numpy as np
+import curses
+from curses import wrapper
 
 class thing:
     def __init__(self, name, id):
@@ -96,22 +98,20 @@ class mark_manage:
     def add_score(self, mark: float, sid: str, cid: str):
         #This function add score of a specific student for a specific subject
         if self.__find_course(cid) is None:
-            print("Course ID not found")
-            return
+            raise ValueError("Course ID not found")
         
         if not self.__find_student(sid) is None:
             s = self.__find_student(sid)
             s.mark.update({cid: math.floor(mark*10)/10})
-            s.GPA = self.update_GPA(sid)
+            s.GPA = self.__update_GPA(sid)
             
         else:
-            print("Student ID not found")
-            return
+            raise ValueError("Student ID not found")
 
-    def update_GPA(self, sid):
+    def __update_GPA(self, sid):
         s = self.__find_student(sid)
         if s is None:
-            return 0.0
+            raise ValueError("Student ID not found")
         
         cal = []
         
@@ -123,9 +123,6 @@ class mark_manage:
         store = np.array(cal)
         return np.average(store)
                     
-                    
-        
-
 def main():
     testc = course_list()
     testc.add("Basic Programming","1",3)
