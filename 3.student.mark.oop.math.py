@@ -47,6 +47,16 @@ class student(thing):
             
         print(f"GPA: {self.__GPA:.1f}")
         
+    def update_GPA(self, course: 'course_list'):
+        cal = []
+        
+        for c,m in self.__mark.items():
+            for i in course.get_list():
+                if c == i.get_ID():
+                    cal += [m] * i.get_credit()
+                    
+        return np.average(cal)
+        
     #Getters
     def get_DoB(self):
         return self.__DoB
@@ -85,7 +95,7 @@ class course(thing):
         
 class list:
     def __init__(self):
-        self.List = []
+        self._List = []
         
     def add(self):
         pass
@@ -93,77 +103,65 @@ class list:
     def display(self):
         pass
     
+    def get_list(self):
+        return self._List
+    
 class student_list(list):        
     def add(self, name : str, id : str, DoB : str):
         s = student(name, id, DoB)
         
-        self.List.append(s)
+        self._List.append(s)
         
     def display(self):
-        for i in self.List:
-            print(f"Student {self.List.index(i) + 1}:")
+        for i in self._List:
+            print(f"Student {self._List.index(i) + 1}:")
             print()
             i.display_info()
             i.display_score()
+            
+    def get_student(self, sid: str):
+        for s in self._List:
+            if s.get_ID() == sid:
+                return s
+        return None
 
 class course_list(list):
     def add(self, name: str, id: str, cred: int):
         c = course(name, id, cred)
         
-        self.List.append(c)
+        self._List.append(c)
 
     def display(self):
-        for i in self.List:
-            print(f"Course {self.List.index(i) + 1}:")
+        for i in self._List:
+            print(f"Course {self._List.index(i) + 1}:")
             print()
             i.display()
+            
+    def get_course(self, cid: str):
+        for c in self._List:
+            if c.get_ID() == cid:
+                return c
+        return None
 
 class mark_manage:
-    def __init__(self, sl : object, cl : object):
-        self.student_list = sl.List
-        self.course_list = cl.List
-
-    def __find_student(self, sid):
-        for i in self.student_list:
-            if i.get_ID() == sid:
-                return i
-        return None
-    
-    def __find_course(self, cid):
-        for i in self.course_list:
-            if i.get_ID() == cid:
-                return i
-        return None
+    def __init__(self, sl : student_list, cl : course_list):
+        self.__student_list = sl
+        self.__course_list = cl
 
     def add_score(self, mark: float, sid: str, cid: str):
         #This function add score of a specific student for a specific subject
-        if self.__find_course(cid) is None:
+        if self.__course_list.get_course(cid) is None:
             raise ValueError("Course ID not found")
         
-        if not self.__find_student(sid) is None:
-            s = self.__find_student(sid)
+        if not self.__student_list.get_student(sid) is None:
+            s = self.__student_list.get_student(sid)
             #s.mark.update({cid: math.floor(mark*10)/10})
             s.set_mark(cid, math.floor(mark*10)/10)
-            s.GPA = s.set_GPA(self.__update_GPA(sid))
+            s.set_GPA(s.update_GPA(self.__course_list))
             
         else:
             raise ValueError("Student ID not found")
 
-    def __update_GPA(self, sid):
-        s = self.__find_student(sid)
-        if s is None:
-            raise ValueError("Student ID not found")
-        
-        cal = []
-        
-        for c,m in s.get_mark().items():
-            for i in self.course_list:
-                if c == i.get_ID():
-                    cal += [m] * i.get_credit()
-                    
-        store = np.array(cal)
-        return np.average(store)
-                    
 def main():
     testc = course_list()
     testc.add("Basic Programming","1",3)
