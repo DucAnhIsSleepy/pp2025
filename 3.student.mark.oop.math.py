@@ -45,7 +45,7 @@ class student(thing):
             print(f"Mark: {v}")
             print()
             
-        print(f"GPA: {self.__GPA:.1f}")
+        print(f"GPA: {self.__GPA:.1f}\n")
         
     def update_GPA(self, course: 'course_list'):
         cal = []
@@ -113,6 +113,8 @@ class student_list(list):
         self._List.append(s)
         
     def display(self):
+        self._List.sort(key=lambda x: x.get_GPA())
+        
         for i in self._List:
             print(f"Student {self._List.index(i) + 1}:")
             print()
@@ -155,7 +157,6 @@ class mark_manage:
         
         if not self.__student_list.get_student(sid) is None:
             s = self.__student_list.get_student(sid)
-            #s.mark.update({cid: math.floor(mark*10)/10})
             s.set_mark(cid, math.floor(mark*10)/10)
             s.set_GPA(s.update_GPA(self.__course_list))
             
@@ -169,10 +170,15 @@ def main():
     
     tests = student_list()
     tests.add("Phạm Đức Anh","2410088","08/02/2006")
+    tests.add("Trần Khoa Nam","2410702","19/10/2006")
     
     testm = mark_manage(tests, testc)
     testm.add_score(16.8888, "2410088", "1")
     testm.add_score(17.6666, "2410088", "2")
+    
+    testm.add_score(15.3333, "2410702", "1")
+    testm.add_score(14.6666, "2410702", "2")
+    
     tests.display()
 
 if __name__ == "__main__":
